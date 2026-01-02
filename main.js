@@ -320,41 +320,23 @@ function shift(data, dir) {
     }
 }
 
-// ASCII Art Parser for Bad Apple
+// Hex Decoder for Bad Apple (Pixel Perfect)
 function drawBadApple(data) {
-    if (typeof BAD_APPLE_ASCII === 'undefined') {
-        console.error("BAD_APPLE_ASCII not found. Ensure bad_apple_data.js is loaded.");
+    if (typeof BAD_APPLE_BIN === 'undefined') {
+        console.error("BAD_APPLE_BIN not found. Ensure bad_apple_data.js is loaded.");
         return;
     }
 
-    // Inverted Logic for Shadow Art Style (Black Silhouette on White Background)
-    // The ASCII data has characters for the Person and spaces for the Background.
-    // We want Person = Black (0), Background = White (1).
-    data.fill(1); // Default to White Background
-    
-    const lines = BAD_APPLE_ASCII.split('\n');
-    
-    // Config: The ASCII is approx 144 chars wide.
-    // Vertical scaling: 3x looks about right for ASCII aspect ratio.
-    const SCALE_Y = 3;
-    const offsetX = Math.floor((LOGIC_WIDTH - 144) / 2); // Center horizontally
-    
-    // Loop through ASCII lines
-    for (let y = 0; y < lines.length; y++) {
-        const line = lines[y];
-        for (let x = 0; x < line.length; x++) {
-            if (line[x] !== ' ') {
-                // It's a character (The Person). Set to Black (0).
-                const targetX = x + offsetX;
-                
-                // Draw a vertical strip of SCALE_Y pixels
-                for (let sy = 0; sy < SCALE_Y; sy++) {
-                    const targetY = (y * SCALE_Y) + sy;
-                    
-                    if (targetX >= 0 && targetX < LOGIC_WIDTH && targetY >= 0 && targetY < LOGIC_HEIGHT) {
-                        data[targetY * LOGIC_WIDTH + targetX] = 0;
-                    }
-                }
+    let pixelIndex = 0;
+    // Iterate through the Hex string
+    for (let i = 0; i < BAD_APPLE_BIN.length; i++) {
+        const hexVal = parseInt(BAD_APPLE_BIN[i], 16);
+        
+        // Extract 4 bits (MSB first)
+        for (let b = 3; b >= 0; b--) {
+            if (pixelIndex < data.length) {
+                data[pixelIndex] = (hexVal >> b) & 1;
+                pixelIndex++;
             }
         }
     }
