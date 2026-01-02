@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Bitwise Architecture Simulator</title>
+    <style>
+        /* CSS Hints */
+        body { background: #111; color: #eee; font-family: monospace; display: flex; gap: 20px; justify-content: center; padding: 20px; }
+        
+        .column { display: flex; flex-direction: column; gap: 10px; width: 320px; } /* Fits the 2x scaled canvas */
+        
+        canvas.screen { 
+            width: 100%; 
+            image-rendering: pixelated; /* Critical for retro look */
+            border: 2px solid #555; 
+            background: #000;
+        }
+
+        .bit-view {
+            width: 100%;
+            height: 320px; /* Force it to match the visual screen height */
+            image-rendering: pixelated;
+            border: 1px solid #333;
+            background: #0d0d0d;
+            opacity: 0.8;
+        }
+
+        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; }
+        .mode-toggle { grid-column: span 2; display: flex; gap: 10px; justify-content: center; background: #222; padding: 5px; }
+        
+        button { cursor: pointer; font-family: monospace; }
+        .active-op { background: #0f0; color: #000; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="column">
+        <h3>REGISTER A</h3>
+        <canvas id="canvasA" width="160" height="144" class="screen"></canvas>
+        
+        <div class="mode-toggle">
+            <label><input type="radio" name="modeA" value="0"> ERASE (0)</label>
+            <label><input type="radio" name="modeA" value="1" checked> DRAW (1)</label>
+        </div>
+
+        <div class="controls">
+            <button id="btnA_Clear">SET 0</button>
+            <button id="btnA_Fill">SET 1</button>
+            <button id="btnA_Not">NOT</button>
+            <button id="btnA_BadApple">BAD APPLE</button>
+            <button id="btnA_SL">&lt;&lt; SHL</button>
+            <button id="btnA_SR">SHR &gt;&gt;</button>
+        </div>
+
+        <canvas id="bitsA" width="160" height="144" class="bit-view"></canvas>
+    </div>
+
+    <div class="column">
+        <h3>REGISTER B</h3>
+        <canvas id="canvasB" width="160" height="144" class="screen"></canvas>
+
+        <div class="mode-toggle">
+            <label><input type="radio" name="modeB" value="0"> ERASE (0)</label>
+            <label><input type="radio" name="modeB" value="1" checked> DRAW (1)</label>
+        </div>
+
+        <div class="controls">
+            <button id="btnB_Clear">SET 0</button>
+            <button id="btnB_Fill">SET 1</button>
+            <button id="btnB_Not">NOT</button>
+            <button id="btnB_Copy">COPY A</button>
+            <button id="btnB_SL">&lt;&lt; SHL</button>
+            <button id="btnB_SR">SHR &gt;&gt;</button>
+            <button id="btnB_Pattern" style="grid-column: span 2">PATTERN: NONE</button>
+        </div>
+
+        <canvas id="bitsB" width="160" height="144" class="bit-view"></canvas>
+    </div>
+
+    <div class="column">
+        <h3>ALU OUTPUT</h3>
+        <div class="controls" style="grid-template-columns: 1fr;">
+            <button class="op-btn active-op" data-op="AND">A AND B</button>
+            <button class="op-btn" data-op="OR">A OR B</button>
+            <button class="op-btn" data-op="XOR">A XOR B</button>
+            <button class="op-btn" data-op="NAND">A NAND B</button>
+        </div>
+
+        <div id="truth-table" style="background: #222; padding: 10px; font-size: 12px; margin-bottom: 10px; border-radius: 4px; border: 1px solid #444;">
+            <!-- Will be populated by JS -->
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+            <button id="btn_ToggleHex" style="flex-grow: 1;">MODE: BINARY</button>
+        </div>
+
+        <canvas id="canvasRes" width="160" height="144" class="screen"></canvas>
+        <canvas id="bitsRes" width="160" height="144" class="bit-view"></canvas>
+    </div>
+
+    <script src="bad_apple_data.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
